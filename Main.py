@@ -63,7 +63,7 @@ class SpotifyApiClient(): # Spotify Client
     def __init__(self): #  Creates spotify OAuth client
         self.sp_oauth = createSpotifyOAuth() # Initiate OAuth 2.0
         code = request.args.get('code') # Gets varification code that OAuth 2.0 is complete
-        token_info = self.sp_oauth.get_access_token(code) # Gets Spotify API token infomation using OAuth 2.0 code
+        token_info = self.sp_oauth.get_access_token(code) # Gets Spotify API token information using OAuth 2.0 code
         # Extracts individual tokens from token_info
         self.access_token = token_info['access_token']
         self.refresh_token = token_info['refresh_token']
@@ -129,9 +129,9 @@ def main():
     
     if playlist_length > 100: # Goes in to this loop because multiple playlist pages will need to be accessed
         while song_index < 100: #  Loop that gets songs from playlist and downloads them (only for the first page of the playlist)
-            song_info = spotify_client.getSongInfoFirstPage(spotify_playlist, song_index) # Gets infomation on song in playlist, indexed by song_index
+            song_info = spotify_client.getSongInfoFirstPage(spotify_playlist, song_index) # Gets information on song in playlist, indexed by song_index
             video_info = youtube_client.getViedoInfoFromQuery(song_info[0] + " " + song_info[1]) # Search for YouTube video using song name and artist from song_info
-            youtube_client.addSongToPlaylist(video_info['items'][0]['id']['videoId'], youtube_playlist['id'])
+            youtube_client.addSongToPlaylist(video_info['items'][0]['id']['videoId'], youtube_playlist['id']) # Addes song video found by search to YouTube playlist
             # Check if Spotify token has expired and refresh it if it has
             if spotify_client.token_expires < time.time():
                 spotify_client.tokenRefresh()
@@ -143,31 +143,33 @@ def main():
                 spotify_playlist = spotify_client.getNextPlaylistInfo(next_url) # URL for the next page of the playlist
                 next_url = spotify_playlist.json()['next'] # Prepares new URL for the page after this new one
                 playlist_length = spotify_playlist.json()['total'] # Gets playlist length
-                page_number += 1
+                page_number += 1 # Increment page number
 
-            song_info = spotify_client.getSongInfoSecondPage(spotify_playlist, song_index - 100 * page_number)
-            video_info = youtube_client.getViedoInfoFromQuery(song_info[0] + " " + song_info[1])
-            youtube_client.addSongToPlaylist(video_info['items'][0]['id']['videoId'], youtube_playlist['id'])
+            song_info = spotify_client.getSongInfoSecondPage(spotify_playlist, song_index - 100 * page_number) # Gets song information by offsetting the song_index by the number of pages used
+            video_info = youtube_client.getViedoInfoFromQuery(song_info[0] + " " + song_info[1]) # Search for YouTube video using song name and artist from song_info
+            youtube_client.addSongToPlaylist(video_info['items'][0]['id']['videoId'], youtube_playlist['id']) # Addes song video found by search to YouTube playlist
+            # Check if Spotify token has expired and refresh it if it has
             if spotify_client.token_expires < time.time():
                 spotify_client.tokenRefresh()
 
-            song_index += 1
+            song_index += 1 # Increment song_index
     else:
         while song_index < playlist_length: #  Loop that gets songs from playlist and downloads them
-            song_info = spotify_client.getSongInfoFirstPage(spotify_playlist, song_index - 100 * page_number) # Gets song information by offsetting the song index by the number of pages used
-            video_info = youtube_client.getViedoInfoFromQuery(song_info[0] + " " + song_info[1])
-            youtube_client.addSongToPlaylist(video_info['items'][0]['id']['videoId'], youtube_playlist['id'])
+            song_info = spotify_client.getSongInfoFirstPage(spotify_playlist, song_index) # Gets song information
+            video_info = youtube_client.getViedoInfoFromQuery(song_info[0] + " " + song_info[1]) # Search for YouTube video using song name and artist from song_info
+            youtube_client.addSongToPlaylist(video_info['items'][0]['id']['videoId'], youtube_playlist['id']) # Addes song video found by search to YouTube playlist
+            # Check if Spotify token has expired and refresh it if it has
             if spotify_client.token_expires < time.time():
                 spotify_client.tokenRefresh()
 
-            song_index += 1
+            song_index += 1 # Increment song_index
     
 
 
 
+#  Creates flask application
 app = Flask(__name__)
 
-#  Creates flask application
 @app.route('/')
 def login():
     sp_oauth = createSpotifyOAuth()
