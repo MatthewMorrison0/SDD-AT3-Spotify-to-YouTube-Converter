@@ -1,0 +1,160 @@
+
+.Top_div{
+    background-color: black;
+    padding-bottom: 15px;
+}
+
+.Name_div{
+    background-color: black;
+    padding-bottom: 15px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.Name{
+    color: rgb(255, 255, 255);
+    font-family: 'Varela Round', sans-serif;
+    font-weight: bold;
+    font-size: 50px;
+    text-align: center;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.Title_div{
+    background-color: rgb(23, 23, 23);
+    padding-bottom: 10px;
+    margin-top: 10px;
+    margin-bottom: 0px;
+    
+}
+
+.Title {
+    background: -webkit-linear-gradient(0deg, rgb(30, 215, 96) 10%,#c4302b 70%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-family: 'Varela Round', sans-serif;
+    font-weight: bold;
+    font-size: 40px;
+    text-align: center;
+    margin-top: 0px;
+    margin-bottom: 10px;
+    padding-bottom: 1px;
+}
+
+
+
+.Select_Playlist {
+    color: rgb(255, 255, 255);
+    font-family: 'Varela Round', sans-serif;
+    font-weight: bold;
+    font-size: 30px;
+    text-align: left;
+    margin-top: 35px;
+    margin-left: 300px;
+}
+
+
+
+.Playlist_Title_div{
+    display: inline-block;
+    width: 200px;
+    margin-left: 300px;
+}
+
+
+
+.Playlist_Title{
+    color: rgb(255, 255, 255);
+    font-family: 'Varela Round', sans-serif;
+    font-weight: bold;
+    font-size: 27px;
+    text-align: left;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+
+
+.Convert_Button_div{
+    display: inline-block;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-left: 50px;
+    margin-right: 500px;
+}
+
+
+
+.Convert_Button{
+    background-color: rgb(30, 215, 96);
+    border: none;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 45px;
+    padding-right: 45px;
+    border-radius: 30px;
+    font-family: 'Varela Round', sans-serif;
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+
+
+
+.Different_Playlist_div{
+    text-align: center;
+    margin-top: 75px;
+    padding-bottom: 53px;
+    background-color: rgb(73, 196, 116);
+}
+
+
+
+.Different_Playlist_button{
+    background-color: rgb(255, 255, 255);
+    border: none;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    padding-left: 45px;
+    padding-right: 45px;
+    border-radius: 30px;
+    font-family: 'Varela Round', sans-serif;
+    font-weight: bold;
+    font-size: 20px;
+    margin-top: 27px;
+}
+
+
+
+.Empty_1{
+    padding-bottom: 0px;
+}
+
+
+
+.Help_div{
+    background-color: rgb(0, 0, 0);
+    text-align: right;
+    padding-top: 20px;   
+    padding-bottom: 38px;
+}
+
+
+
+.Help_Button{
+    background-color: rgb(48, 48, 48);
+    color: white;
+    border: none;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 30px;
+    font-family: 'Varela Round', sans-serif;
+    font-size: 20px;
+    margin-bottom: 5px;
+    margin-top: 10px;
+    margin-right: 15px;
+}

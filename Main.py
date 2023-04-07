@@ -1,6 +1,7 @@
 from spotipy.oauth2 import SpotifyOAuth
 import webbrowser
-from flask import Flask, request, url_for, session, redirect
+from flask import Flask, request, url_for, session, redirect, render_template
+from flask_executor import Executor
 import requests
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -122,7 +123,7 @@ def main():
     next_url = spotify_playlist['tracks']['next'] # Extracts URL for the next page of the playlist (each page only contains at most 100 songs)
     playlist_length = spotify_playlist['tracks']['total'] # Gets playlist length
 
-    youtube_playlist = youtube_client.createPlaylist('Ambient') # Creates playlist on users YouTube account
+    youtube_playlist = youtube_client.createPlaylist(spotify_playlist['name']) # Creates playlist on users YouTube account with same name as Spotify playlist
 
     song_index = 0
     page_number = 0
@@ -141,8 +142,8 @@ def main():
         while song_index < playlist_length: #  Loop for pages of the playlist other than 1
             if song_index % 100 == 0 and next_url != None: #  Gets new page every 100 songs
                 spotify_playlist = spotify_client.getNextPlaylistInfo(next_url) # URL for the next page of the playlist
-                next_url = spotify_playlist.json()['next'] # Prepares new URL for the page after this new one
-                playlist_length = spotify_playlist.json()['total'] # Gets playlist length
+                next_url = spotify_playlist['next'] # Prepares new URL for the page after this new one
+                playlist_length = spotify_playlist['total'] # Gets playlist length
                 page_number += 1 # Increment page number
 
             song_info = spotify_client.getSongInfoSecondPage(spotify_playlist, song_index - 100 * page_number) # Gets song information by offsetting the song_index by the number of pages used
@@ -153,7 +154,7 @@ def main():
                 spotify_client.tokenRefresh()
 
             song_index += 1 # Increment song_index
-    else:
+    else: # If playlist_length <= 100, only one page will need to be accessed
         while song_index < playlist_length: #  Loop that gets songs from playlist and downloads them
             song_info = spotify_client.getSongInfoFirstPage(spotify_playlist, song_index) # Gets song information
             video_info = youtube_client.getViedoInfoFromQuery(song_info[0] + " " + song_info[1]) # Search for YouTube video using song name and artist from song_info
@@ -169,6 +170,7 @@ def main():
 
 #  Creates flask application
 app = Flask(__name__)
+executor = Executor(app)
 
 @app.route('/')
 def login():
@@ -176,10 +178,24 @@ def login():
     auth_url = sp_oauth.get_authorize_url()
     return redirect(auth_url)
 
-@app.route('/redirect')
+@app.route('/redirect', methods=['GET', 'POST'])
 def redirectPage():
-    main()
-    return 'Playlist Converted'
+    if request.form.get('Convert1') == 'Convert':
+        print('Goodbye')
+        return redirect(url_for('convertingPlaylist'))
+    return render_template('HomePage.html')
+
+@app.route('/convertingPlaylist', methods=['GET', 'POST'])
+def convertingPlaylist():
+    print("convertingPlaylist")
+    if request.method == 'POST':
+        print("Done")
+        return redirect(url_for('redirectPage'))
+    return render_template('ConvertingPlaylist.html')
+
+@app.route('/playlistConverted', methods=['GET', 'POST'])
+def playlistConverted():
+    return render_template('PlaylistConverted.html', main=main)
 
 #  Creates spotify Oauth client
 def createSpotifyOAuth():
@@ -190,5 +206,6 @@ def createSpotifyOAuth():
         scope='user-read-private'
     )
 
-webbrowser.open('http://127.0.0.1:5000') #  Opens site on webbrowser automatically
-app.run() #  Runs flask application
+if __name__ == "__main__":
+    webbrowser.open('http://127.0.0.1:5000') #  Opens site on webbrowser automatically
+    app.run(port=5000) #  Runs flask application

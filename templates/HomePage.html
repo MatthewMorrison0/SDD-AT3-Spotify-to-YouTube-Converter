@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/HomePage.css') }}">
+    <title>Document</title>
+</head>
+<body>
+    <body style="background-color:rgb(23, 23, 23);">
+        <div class="Top_div">
+            
+        </div>
+    
+        <div class="Name_div">
+            <p class="Name">
+                <img style='vertical-align:middle; scale: 1;' src='Spotify.jpeg'>
+                SongSwap
+                <img style='vertical-align:middle; scale: 1;' src='YouTube.png'>
+            </p>
+    
+        </div>
+        
+        <div class="Title_div">
+            <p class="Title">
+                Spotify To YouTube Converter
+            </p>
+        </div>
+        
+        <div class="Empty_1">
+        
+        </div>
+        
+        <p class="Select_Playlist">
+            Select Playlist:
+        </p>
+        
+        <div class="Playlist_Title_div">
+            <p class="Playlist_Title">
+                Playlist 1
+            </p>
+        </div>
+        
+        <div class="Convert_Button_div">
+            <form method="post" action="/redirect">
+                <input class="Convert_Button" type="submit" value="Convert" name="Convert1"/>
+            </form>
+        </div>
+        
+        <div class="Playlist_Title_div">
+            <p class="Playlist_Title">
+                Playlist 2
+            </p>
+        </div>
+        
+        <div class="Convert_Button_div">
+            <form method="post" action="/redirect">
+                <input class="Convert_Button" type="submit" value="Convert" name="Convert1"/>
+            </form>
+        </div>
+        
+        <div class="Playlist_Title_div">
+            <p class="Playlist_Title">
+                Playlist 3
+            </p>
+        </div>
+        
+        <div class="Convert_Button_div">
+            <form method="post" action="/redirect">
+                <input class="Convert_Button" type="submit" value="Convert" name="Convert1"/>
+            </form>
+        </div>
+        
+        <div class="Different_Playlist_div">
+            <button class="Different_Playlist_button">
+                Convert a Different Playlist
+            </button>
+        </div>
+        
+        
+        <div class="Help_div">
+            <form method="post" action="/redirect">
+                <input class="Help_Button" type="submit" value="Help" name="Help"/>
+            </form>
+        </div>
+</body>
+</html>
+
