@@ -11,6 +11,7 @@ import time
 spotify_client_id = '30f5cc799ffc4f1a89a2cdc6f8b0784b' # ID used for Spotify API client
 spotify_client_secret = 'a6d4c157e9e04410b6bf784c26e7ca68' # Secret code used for Spotify API client
 spotify_playlist_id = 'NULL'
+youtube_playlist_url = 'NULL'
 
 
 
@@ -36,11 +37,14 @@ class YouTubeApiClient(): #YouTube Client
     
     def createPlaylist(self, name): # Creates YouTube Playlist with given name on users account
         request = self.youtube_service.playlists().insert(
-            part="snippet",
+            part="snippet, status",
             body={
             "snippet": {
-            "title": name,
-                }
+                "title": name 
+            },
+            "status": {
+                "privacyStatus": "public"
+            }
             }
         )
         response = request.execute()
@@ -156,12 +160,14 @@ def main():
     global spotify_playlist_id
     global spotify_client
     global youtube_client
+    global youtube_playlist_url
 
     spotify_playlist = spotify_client.getPlaylistInfo(playlist_id=spotify_playlist_id) # Gets playlist using ID
     next_url = spotify_playlist['tracks']['next'] # Extracts URL for the next page of the playlist (each page only contains at most 100 songs)
     playlist_length = spotify_playlist['tracks']['total'] # Gets playlist length
 
     youtube_playlist = youtube_client.createPlaylist(spotify_playlist['name']) # Creates playlist on users YouTube account with same name as Spotify playlist
+    youtube_playlist_url = 'https://www.youtube.com/playlist?list=' + youtube_playlist['id']
 
     song_index = 0
     page_number = 0
@@ -212,34 +218,39 @@ executor = Executor(app)
 
 @app.route('/')
 def login():
+    # Create Spotify OAuth to get redirect page
     sp_oauth = createSpotifyOAuth()
     auth_url = sp_oauth.get_authorize_url()
-    return redirect(auth_url)
+
+    return redirect(auth_url) # Go to redirect page given by Spotify
 
 @app.route('/redirect', methods=['GET', 'POST'])
 def redirectPage():
-    return render_template('Redirect.html')
+    return render_template('Redirect.html') # Render the html for the redirect page
 
-@app.route('/toHome', methods=['GET', 'POST'])
+@app.route('/toHome', methods=['GET', 'POST']) # Page has html that calls fetchUserData, then redirects to home page
 def toHome():
     return render_template('toHome.html', fetchUserData=fetchUserData)
 
-@app.route('/homePage', methods=['GET', 'POST'])
+@app.route('/homePage', methods=['GET', 'POST']) # Home Page site
 def homePage():
-    if 'id' in request.form:
+    if 'id' in request.form: # Has the 'Convert' button been pressed?
+        # If so, go to convertingPlaylist site and set the spotify_playlist_id varible to the id corresponding to the button pressed
         global spotify_playlist_id
         spotify_playlist_id = request.form['id']
         return redirect(url_for('convertingPlaylist'))
-    return render_template('HomePage.html', playlists=user_playlists)
+    return render_template('HomePage.html', playlists=user_playlists) # Render Home Page html
 
 @app.route('/convertingPlaylist', methods=['GET', 'POST'])
 def convertingPlaylist():
-    if request.method == 'POST':
-        return redirect(url_for('redirectPage'))
     return render_template('ConvertingPlaylist.html')
 
 @app.route('/playlistConverted', methods=['GET', 'POST'])
 def playlistConverted():
+    if 'open_playlist' in request.form:
+        webbrowser.open(youtube_playlist_url)
+    if 'home_page' in request.form:
+        return redirect('/homePage')
     return render_template('PlaylistConverted.html', main=main)
 
 #  Creates spotify Oauth client
