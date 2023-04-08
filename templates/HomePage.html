@@ -39,43 +39,24 @@
         <p class="Select_Playlist">
             Select Playlist:
         </p>
+
+        {% for playlist in playlists %}
         
-        <div class="Playlist_Title_div">
-            <p class="Playlist_Title">
-                Playlist 1
-            </p>
-        </div>
+            <div class="Playlist_Title_div">
+                <p class="Playlist_Title">
+                    {{ playlist['name'] }}
+                </p>
+            </div>
+            
+            <div class="Convert_Button_div">
+                <form method="post" action="/homePage">
+                    <input type="hidden" name="id" value={{ playlist['id'] }}>
+                    <input class="Convert_Button" type="submit" value="Convert"/>
+                </form>
+            </div>
         
-        <div class="Convert_Button_div">
-            <form method="post" action="/redirect">
-                <input class="Convert_Button" type="submit" value="Convert" name="Convert1"/>
-            </form>
-        </div>
-        
-        <div class="Playlist_Title_div">
-            <p class="Playlist_Title">
-                Playlist 2
-            </p>
-        </div>
-        
-        <div class="Convert_Button_div">
-            <form method="post" action="/redirect">
-                <input class="Convert_Button" type="submit" value="Convert" name="Convert1"/>
-            </form>
-        </div>
-        
-        <div class="Playlist_Title_div">
-            <p class="Playlist_Title">
-                Playlist 3
-            </p>
-        </div>
-        
-        <div class="Convert_Button_div">
-            <form method="post" action="/redirect">
-                <input class="Convert_Button" type="submit" value="Convert" name="Convert1"/>
-            </form>
-        </div>
-        
+        {% endfor %}    
+
         <div class="Different_Playlist_div">
             <button class="Different_Playlist_button">
                 Convert a Different Playlist

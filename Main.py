@@ -10,6 +10,9 @@ import time
 
 spotify_client_id = '30f5cc799ffc4f1a89a2cdc6f8b0784b' # ID used for Spotify API client
 spotify_client_secret = 'a6d4c157e9e04410b6bf784c26e7ca68' # Secret code used for Spotify API client
+spotify_playlist_id = 'NULL'
+
+
 
 class YouTubeApiClient(): #YouTube Client 
     def __init__(self):
@@ -109,16 +112,51 @@ class SpotifyApiClient(): # Spotify Client
         artist_name = spotify_playlist['items'][song_number]['track']['album']['artists'][0]['name']
         song_name = spotify_playlist['items'][song_number]['track']['name']
         return [song_name, artist_name]
+    
+    def getUsersPlaylists(self, user_id, offset):
+        headers = {
+            "Authorization" : f"Bearer {self.access_token}"
+        }
+        endpoint = 'https://api.spotify.com/v1/users/' + user_id + '/playlists?offset=' + str(offset) + '&limit=50'
+        return requests.get(endpoint, headers=headers).json()
+    
+    def getUser(self):
+        headers = {
+            "Authorization" : f"Bearer {self.access_token}"
+        }
+        endpoint = 'https://api.spotify.com/v1/me'
+        return requests.get(endpoint, headers=headers).json()
 
 
+
+def fetchUserData():
+    # Create Spotify and YouTube clients
+    global spotify_client
+    spotify_client = SpotifyApiClient()
+    global youtube_client
+    youtube_client = YouTubeApiClient()
+
+    user_id = spotify_client.getUser()['id']
+    user_playlists_info = spotify_client.getUsersPlaylists(user_id, 0)
+    global user_playlists
+    user_playlists = []
+    playlist_index = 0
+    while playlist_index < len(user_playlists_info['items']):
+        user_playlists.append({'id': user_playlists_info['items'][playlist_index]['id'], 'name': user_playlists_info['items'][playlist_index]['name']})
+        playlist_index += 1
+    while user_playlists_info['next'] != None:
+        user_playlists_info = spotify_client.getUsersPlaylists(user_id, user_playlists_info['offset'] + 50)
+        playlist_index = 0
+        while playlist_index < len(user_playlists_info['items']):
+            user_playlists.append({'id': user_playlists_info['items'][playlist_index]['id'], 'name': user_playlists_info['items'][playlist_index]['name']})
+            playlist_index += 1
 
 
 def main():
-    # Create Spotify and YouTube clients
-    spotify_client = SpotifyApiClient()
-    youtube_client = YouTubeApiClient()
+    global spotify_playlist_id
+    global spotify_client
+    global youtube_client
 
-    spotify_playlist_id = '2Kx3nUV09qY9W1jCbXFPUP?si=bd55d256a4244b9d&pt=811cbf9318080ec1b780d18c1a3864d7' # Playlist ID (Only used for testing)
     spotify_playlist = spotify_client.getPlaylistInfo(playlist_id=spotify_playlist_id) # Gets playlist using ID
     next_url = spotify_playlist['tracks']['next'] # Extracts URL for the next page of the playlist (each page only contains at most 100 songs)
     playlist_length = spotify_playlist['tracks']['total'] # Gets playlist length
@@ -180,16 +218,23 @@ def login():
 
 @app.route('/redirect', methods=['GET', 'POST'])
 def redirectPage():
-    if request.form.get('Convert1') == 'Convert':
-        print('Goodbye')
+    return render_template('Redirect.html')
+
+@app.route('/toHome', methods=['GET', 'POST'])
+def toHome():
+    return render_template('toHome.html', fetchUserData=fetchUserData)
+
+@app.route('/homePage', methods=['GET', 'POST'])
+def homePage():
+    if 'id' in request.form:
+        global spotify_playlist_id
+        spotify_playlist_id = request.form['id']
         return redirect(url_for('convertingPlaylist'))
-    return render_template('HomePage.html')
+    return render_template('HomePage.html', playlists=user_playlists)
 
 @app.route('/convertingPlaylist', methods=['GET', 'POST'])
 def convertingPlaylist():
-    print("convertingPlaylist")
     if request.method == 'POST':
-        print("Done")
         return redirect(url_for('redirectPage'))
     return render_template('ConvertingPlaylist.html')
 
