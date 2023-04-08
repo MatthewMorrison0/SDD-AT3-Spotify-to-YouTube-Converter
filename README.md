@@ -8,10 +8,10 @@ Getting Started:
 * Download the code from GitHub
 * Download Python
 * Do the following pip installs:
-- pip install spotipy
-- pip install flask
-- pip install google-api-python-client
-- pip install google-auth-oauthlib
+    - pip install spotipy
+    - pip install flask
+    - pip install google-api-python-client
+    - pip install google-auth-oauthlib
 * The code should now be able to run
 
 
