@@ -1,7 +1,6 @@
 from spotipy.oauth2 import SpotifyOAuth
 import webbrowser
 from flask import Flask, request, url_for, session, redirect, render_template
-from flask_executor import Executor
 import requests
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -12,6 +11,8 @@ spotify_client_id = '30f5cc799ffc4f1a89a2cdc6f8b0784b' # ID used for Spotify API
 spotify_client_secret = 'a6d4c157e9e04410b6bf784c26e7ca68' # Secret code used for Spotify API client
 spotify_playlist_id = 'NULL'
 youtube_playlist_url = 'NULL'
+playlist_converted = False
+previous_page = 'NULL'
 
 
 
@@ -161,60 +162,63 @@ def main():
     global spotify_client
     global youtube_client
     global youtube_playlist_url
+    global playlist_converted
+    if playlist_converted == False:
+        spotify_playlist = spotify_client.getPlaylistInfo(playlist_id=spotify_playlist_id) # Gets playlist using ID
+        next_url = spotify_playlist['tracks']['next'] # Extracts URL for the next page of the playlist (each page only contains at most 100 songs)
+        playlist_length = spotify_playlist['tracks']['total'] # Gets playlist length
 
-    spotify_playlist = spotify_client.getPlaylistInfo(playlist_id=spotify_playlist_id) # Gets playlist using ID
-    next_url = spotify_playlist['tracks']['next'] # Extracts URL for the next page of the playlist (each page only contains at most 100 songs)
-    playlist_length = spotify_playlist['tracks']['total'] # Gets playlist length
+        youtube_playlist = youtube_client.createPlaylist(spotify_playlist['name']) # Creates playlist on users YouTube account with same name as Spotify playlist
+        youtube_playlist_url = 'https://www.youtube.com/playlist?list=' + youtube_playlist['id']
 
-    youtube_playlist = youtube_client.createPlaylist(spotify_playlist['name']) # Creates playlist on users YouTube account with same name as Spotify playlist
-    youtube_playlist_url = 'https://www.youtube.com/playlist?list=' + youtube_playlist['id']
+        song_index = 0
+        page_number = 0
+        
+        if playlist_length > 100: # Goes in to this loop because multiple playlist pages will need to be accessed
+            while song_index < 100: #  Loop that gets songs from playlist and downloads them (only for the first page of the playlist)
+                song_info = spotify_client.getSongInfoFirstPage(spotify_playlist, song_index) # Gets information on song in playlist, indexed by song_index
+                video_info = youtube_client.getViedoInfoFromQuery(song_info[0] + " " + song_info[1]) # Search for YouTube video using song name and artist from song_info
+                youtube_client.addSongToPlaylist(video_info['items'][0]['id']['videoId'], youtube_playlist['id']) # Addes song video found by search to YouTube playlist
+                # Check if Spotify token has expired and refresh it if it has
+                if spotify_client.token_expires < time.time():
+                    spotify_client.tokenRefresh()
 
-    song_index = 0
-    page_number = 0
-    
-    if playlist_length > 100: # Goes in to this loop because multiple playlist pages will need to be accessed
-        while song_index < 100: #  Loop that gets songs from playlist and downloads them (only for the first page of the playlist)
-            song_info = spotify_client.getSongInfoFirstPage(spotify_playlist, song_index) # Gets information on song in playlist, indexed by song_index
-            video_info = youtube_client.getViedoInfoFromQuery(song_info[0] + " " + song_info[1]) # Search for YouTube video using song name and artist from song_info
-            youtube_client.addSongToPlaylist(video_info['items'][0]['id']['videoId'], youtube_playlist['id']) # Addes song video found by search to YouTube playlist
-            # Check if Spotify token has expired and refresh it if it has
-            if spotify_client.token_expires < time.time():
-                spotify_client.tokenRefresh()
+                song_index += 1 # Increment song_index to get next song
 
-            song_index += 1 # Increment song_index to get next song
+            while song_index < playlist_length: #  Loop for pages of the playlist other than 1
+                if song_index % 100 == 0 and next_url != None: #  Gets new page every 100 songs
+                    spotify_playlist = spotify_client.getNextPlaylistInfo(next_url) # URL for the next page of the playlist
+                    next_url = spotify_playlist['next'] # Prepares new URL for the page after this new one
+                    playlist_length = spotify_playlist['total'] # Gets playlist length
+                    page_number += 1 # Increment page number
 
-        while song_index < playlist_length: #  Loop for pages of the playlist other than 1
-            if song_index % 100 == 0 and next_url != None: #  Gets new page every 100 songs
-                spotify_playlist = spotify_client.getNextPlaylistInfo(next_url) # URL for the next page of the playlist
-                next_url = spotify_playlist['next'] # Prepares new URL for the page after this new one
-                playlist_length = spotify_playlist['total'] # Gets playlist length
-                page_number += 1 # Increment page number
+                song_info = spotify_client.getSongInfoSecondPage(spotify_playlist, song_index - 100 * page_number) # Gets song information by offsetting the song_index by the number of pages used
+                video_info = youtube_client.getViedoInfoFromQuery(song_info[0] + " " + song_info[1]) # Search for YouTube video using song name and artist from song_info
+                youtube_client.addSongToPlaylist(video_info['items'][0]['id']['videoId'], youtube_playlist['id']) # Addes song video found by search to YouTube playlist
+                # Check if Spotify token has expired and refresh it if it has
+                if spotify_client.token_expires < time.time():
+                    spotify_client.tokenRefresh()
 
-            song_info = spotify_client.getSongInfoSecondPage(spotify_playlist, song_index - 100 * page_number) # Gets song information by offsetting the song_index by the number of pages used
-            video_info = youtube_client.getViedoInfoFromQuery(song_info[0] + " " + song_info[1]) # Search for YouTube video using song name and artist from song_info
-            youtube_client.addSongToPlaylist(video_info['items'][0]['id']['videoId'], youtube_playlist['id']) # Addes song video found by search to YouTube playlist
-            # Check if Spotify token has expired and refresh it if it has
-            if spotify_client.token_expires < time.time():
-                spotify_client.tokenRefresh()
+                song_index += 1 # Increment song_index
+        else: # If playlist_length <= 100, only one page will need to be accessed
+            while song_index < playlist_length: #  Loop that gets songs from playlist and downloads them
+                song_info = spotify_client.getSongInfoFirstPage(spotify_playlist, song_index) # Gets song information
+                video_info = youtube_client.getViedoInfoFromQuery(song_info[0] + " " + song_info[1]) # Search for YouTube video using song name and artist from song_info
+                youtube_client.addSongToPlaylist(video_info['items'][0]['id']['videoId'], youtube_playlist['id']) # Addes song video found by search to YouTube playlist
+                # Check if Spotify token has expired and refresh it if it has
+                if spotify_client.token_expires < time.time():
+                    spotify_client.tokenRefresh()
 
-            song_index += 1 # Increment song_index
-    else: # If playlist_length <= 100, only one page will need to be accessed
-        while song_index < playlist_length: #  Loop that gets songs from playlist and downloads them
-            song_info = spotify_client.getSongInfoFirstPage(spotify_playlist, song_index) # Gets song information
-            video_info = youtube_client.getViedoInfoFromQuery(song_info[0] + " " + song_info[1]) # Search for YouTube video using song name and artist from song_info
-            youtube_client.addSongToPlaylist(video_info['items'][0]['id']['videoId'], youtube_playlist['id']) # Addes song video found by search to YouTube playlist
-            # Check if Spotify token has expired and refresh it if it has
-            if spotify_client.token_expires < time.time():
-                spotify_client.tokenRefresh()
-
-            song_index += 1 # Increment song_index
+                song_index += 1 # Increment song_index
+        playlist_converted = True
+    else:
+        return
     
 
 
 
 #  Creates flask application
 app = Flask(__name__)
-executor = Executor(app)
 
 @app.route('/')
 def login():
@@ -226,32 +230,58 @@ def login():
 
 @app.route('/redirect', methods=['GET', 'POST'])
 def redirectPage():
+    global previous_page
+    previous_page = '/redirect'
     return render_template('Redirect.html') # Render the html for the redirect page
 
 @app.route('/toHome', methods=['GET', 'POST']) # Page has html that calls fetchUserData, then redirects to home page
 def toHome():
+    global previous_page
+    previous_page = '/toHome'
     return render_template('toHome.html', fetchUserData=fetchUserData)
 
 @app.route('/homePage', methods=['GET', 'POST']) # Home Page site
 def homePage():
+    global previous_page
+    previous_page = '/homePage'
     if 'id' in request.form: # Has the 'Convert' button been pressed?
         # If so, go to convertingPlaylist site and set the spotify_playlist_id varible to the id corresponding to the button pressed
         global spotify_playlist_id
+        global playlist_converted
+        playlist_converted = False
         spotify_playlist_id = request.form['id']
         return redirect(url_for('convertingPlaylist'))
+    elif 'Help' in request.form:
+        return redirect('/help')
     return render_template('HomePage.html', playlists=user_playlists) # Render Home Page html
 
-@app.route('/convertingPlaylist', methods=['GET', 'POST'])
+@app.route('/convertingPlaylist', methods=['GET', 'POST']) # Site that displays 'Converting Playlist' message
 def convertingPlaylist():
+    global previous_page
+    previous_page = '/convertingPlaylist'
     return render_template('ConvertingPlaylist.html')
 
-@app.route('/playlistConverted', methods=['GET', 'POST'])
+@app.route('/playlistConverted', methods=['GET', 'POST']) # Site for once the playlist has finished converting
 def playlistConverted():
-    if 'open_playlist' in request.form:
-        webbrowser.open(youtube_playlist_url)
-    if 'home_page' in request.form:
-        return redirect('/homePage')
-    return render_template('PlaylistConverted.html', main=main)
+    global previous_page
+    previous_page = '\playlistConverted'
+    if 'open_playlist' in request.form: # Has the button to open the playlist been pressed?
+        webbrowser.open(youtube_playlist_url) # If so, open the playlist in a new tab on the web browser
+    elif 'home_page' in request.form: # Has the button to go back to the home page been pressed?
+        return redirect('/homePage') # If so, redirect user to home page
+    elif 'Help' in request.form:
+        return redirect('/help')
+    return render_template('PlaylistConverted.html', main=main) # Render html for page
+
+@app.route('/help', methods=['GET', 'POST'])
+def help():
+    if 'Back' in request.form: # Has the button to go back been pressed?
+        print(1)
+        return redirect(previous_page)
+    elif 'HomePage' in request.form: # Has the button to go back to the home page been pressed?
+        print(2)
+        return redirect('/homePage') # If so, redirect user to home page
+    return render_template('Help.html')
 
 #  Creates spotify Oauth client
 def createSpotifyOAuth():
@@ -263,5 +293,5 @@ def createSpotifyOAuth():
     )
 
 if __name__ == "__main__":
-    webbrowser.open('http://127.0.0.1:5000') #  Opens site on webbrowser automatically
-    app.run(port=5000) #  Runs flask application
+    #webbrowser.open('http://127.0.0.1:5000') #  Opens site on webbrowser automatically
+    app.run(port=5000, host='0.0.0.0') #  Runs flask application

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/Help.css') }}">
+
+    <title>SongSwap</title>
+</head>
+<body>
+    <body style="background-color:rgb(23, 23, 23);">
+        
+        <div class="Top_div">
+        
+        </div>
+        
+        <div class="Title_div">
+            <p class="Title">
+                <img style='vertical-align:middle; scale: 1;' src='/static/Spotify.jpeg'>
+                SongSwap
+                <img style='vertical-align:middle; scale: 1;' src='/static/YouTube.png'>
+            </p>
+        </div>
+
+        <div class="Help_div">
+            <p class="Help">
+                Help
+            </p>
+        </div>
+
+        <div class="Main_div">
+            <p class="Main">
+                This application allows you to convert your Spotify playlist into a YouTube playlist.
+                To do so, head over to the home page where you will see a list of your Spotify playlists.
+                Next to each playlist, you will see a green convert button.
+                Pressing this button will start the conversion of the associated playlist.
+                After converting the playlist, you will have the option to open the new YouTube playlist in a new tab and/or go back to the home page.
+                If you wish to convert a playlist that isn't your own, you can click the white 'Convert A Different Playlist' button on the home page.
+                After pressing this button, you will be met with a search bar where you will need to enter the playlist ID of the playlist you want to convert.
+                To find the playlist ID, you can go to the playlist on Spotify and press 'Share'.
+                You will then need to select the 'copy link' sharing option. 
+                The link that you copied will look something like: https://open.spotify.com/playlist/6OwabUkFXfXPeBmuucTF7I?si=95fc3f7d9d6540f4, however, the part that contains the ID is the part after the 'playlist/'
+                That is, the '6OwabUkFXfXPeBmuucTF7I?si=95fc3f7d9d6540f4' part. 
+                This is the playlist ID.
+                Once you enter this into the search bar, press the convert button and the same steps from before can now be followed.
+                However, if the ID of the playlist you entered doesn't exist, you will be met with a page telling you so.
+                If this is the case, you can either try to enter it again or go back to the home page.
+                <div class="
+                "></div>
+            </p>
+        </div>
+
+        <div class="Back_div">
+            <form method="post" action="/help">
+                <input class="Back" type="submit" value="Back" name="Back"/>
+            </form>
+        </div>
+
+        <div class="Home_Page_div">
+            <form method="post" action="/help">
+                <input class="Home_Page" type="submit" value="HomePage" name="HomePage"/>
+            </form>
+        </div>
+
+        <div class="Footer_div">
+            
+        </div>
+</body>
+</html>
