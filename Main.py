@@ -23,7 +23,9 @@ class YouTubeApiClient(): #YouTube Client
         self.scopes = ['https://www.googleapis.com/auth/youtubepartner', 
                        'https://www.googleapis.com/auth/youtube', 
                        'https://www.googleapis.com/auth/youtube.force-ssl'] # Scopes that determine what data the YouTube API can access
+        
         self.client_secrets_file = 'client_secret_555837191026-lm9sjjlrr1oorltd4sngk8rnvnf9bjkp.apps.googleusercontent.com.json' # Access .json file that holds client secret data
+
         # Initiate OAuth 2.0
         flow = InstalledAppFlow.from_client_secrets_file(self.client_secrets_file, self.scopes) 
         flow.run_local_server()
@@ -86,7 +88,7 @@ class YouTubeApiClient(): #YouTube Client
                     backoff_time *= 2  # Exponential backoff
                 else:
                     raise
-        raise Exception("Failed to add the song to the playlist after multiple retries.")
+        raise Exception("Failed to add the song to the playlist after multiple retries.") # If it fails to add video to playlist after 5 tries
         
 
 class SpotifyApiClient(): # Spotify Client
