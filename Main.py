@@ -1,33 +1,38 @@
-'''                                                                                             
-                                                     ,@@%@@@@@@@@@@@@@@                                           
-                                                   *@@@@@@@@@@@@@@@@@@@@.                           
-                                                 .@@%%%%@#%%%%  %%@%%%%%@                           
-                                                @@%%%%%%@%%%%  %%%@%%%%#@@                          
-                                                @%%%%%%@/#@@   .(@/&%%%%@@                          
-                                                 .&&@@@@%**     ***@@%%%%@                          
-                                                   @/%@%#**   . ***@@*@@@@                          
-                              */((%(/,              @%@&%/@**##***@@@  //                           
-   @@@     *@@@          @@%%%%%%%%%%%%%%%%@@@@@@@%%%%%@/%@&@@@@@(@@                                
-   @@@.    %%%&@@@    .@&%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@*%%**@@@                                
-       @@@%%%%%%%%@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  %%%%@@@&                                
-            *%%/%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%##%% %%%%@@@                                 
-               @%%#****%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%**%#&@@ ,@@@                                 
-                .&&%%@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@/**@                                   
-                       %%%%%%%%@&%%%%%%%%%%%%%%%%%%%%%%@%%%@@@*(@                                   
-                       @%%%%%%@@&%@@@@@@@@@@@@@@@@@@@&@&%%&@&%%@@                                   
-                       @%%%%%%@@%%@@                  @@%%%@%%@@                                    
-                       (%%%%%%@%%@@#                 @@%%%@&%%@@                                    
-                       @%%%%@%%(&@@                  @%%%@@%%@@                                     
-                       @%%%*@***@@                  @&%%%@&%%@@                                     
-                      *@%**(#**@@@                  @@%%&@%%%@@                                     
-                      @@***@***@@#                  @@*/@@%%%@@                                     
-                      @@***@**%%,%  % **            @@**@@(**@@                                     
-                     /%%%%%%%%%..%%% (%%            @@**(@&**#@                                     
-                    %%%.%  *%%%%, %% .%%           @@****@@/*#%%%%%/                                
-                   %%%%,.%%%( %%%%%%%%%*          %%%,%.%%%%%%# .#(%%%                              
-                   %%%%# %%/#%%%%                %%*%,%,/(%%%%#%%/  ,%                              
-                    %%%#% .%*%%%(               .%%.%.%*%,/%%%% ((%#%/                              
-                      ,%%%%%%%*                  %%%%..%(%%%. (%%%%#                                
+'''                                            
+                                                     ^!!.                                           
+                                                   ^P@@@#PYYJJ7777YYJ?7~                            
+                                                  7&&BGB@###&5!B&@&###&&!                           
+                                                ^G&BGGGG&GGGG^ JGBBPGGP##.                          
+                                               ^&#GGGGG#BGGB5 .PBG#GGGG#@Y                          
+                                               !@BGGGG&&5YGP:  7GPPBGGGG@G                          
+                                                75BB&@&BY7!.   ^7!?&BGGP#B.                         
+                                                  ?@&&GG?!~  ...7!Y@&&&&@P                          
+                              ...:...              BBG&G?YJ!5BP!!7#@5!#@#^                          
+   :!7~~77!?!^.          ~?Y5GBBBBBGGGP5Y?77~~^^~7JB#G&B5B@5JJ??YG@@^ .:.                           
+  ?@@J  .::?&@#Y!.     ^P#BGGGGGGGGGGGGGBBBBBBBBBBBGGGG#G5&G5PP5YP@G                                
+  !#@B?^. ^5GB#&@#7^:!P#BGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGB#@#5P5J5&@5                                
+    ^7Y55GGGGGPGB#&&&@&GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG?~5GPPG&@@!                                
+         :~J5GGPPGGGBGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGP5P5~:PPPY#@G                                 
+             ^5BPP5YYYPGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGJ!?G7JG7^Y@@7                                 
+               ?#BGGGGBGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGPY?P5@@?~5@5.                                 
+                :^7JJ!PGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGBGGG@@57JB                                   
+                      ~GGGGGGG#@&#BBGGGGGGGGGGGGGGGBB#&#GGB@&#5&P                                   
+                      ^BGGGGGG@@B#@@#B##&&&&#&&&##BY?Y@BGGB@GG&@7                                   
+                      .BGGGGGB@BP#@#^..:^~~^.^^^..   7@BGG#&P#@#.                                   
+                       GGGGGG#&GG@@!                ^@&GGG@BP&@Y                                    
+                      :BGGGG&#PP#@P                 J@BGG#@GB@&.                                    
+                      !#GGPY#J7Y@&:                 B&GGB@#P&@G                                     
+                      Y&GY75G!!P@5                 ^@#GG#@GG#@P                                     
+                      BBJ!?#?!J@@~                 ~@@PG##GG#@G                                     
+                     ^@B7!J5!!J&&?^^^:             ~@#75@#5GB@Y                                     
+                     J@P!!YGYYPPJ5:J?.7^           !@#7J@&?7Y@?                                     
+                    .Y#P5PG##GG77PP5~~?P.          P@#77#@Y!7&7                                     
+                   :5G55P7?PPGGY7JGPJYPP.         .&@Y77P@#77GB7~~~:                                
+                  .5B5~.5^?PJ5GGPP5PY5B?         :JBGP55GB#PPG?^5JYPY:                              
+                  ~BG7Y5PGP?~^PGJJYYY?~         ^PGY^?PJ?YGG5?Y7PY5JGY                              
+                  :PBP7!5?Y^~YGB7               YB??P5GY77PG5!Y5PJ^^GJ                              
+                   :YGPPY~5YYGG5:               YB55?^P?77PGPPP!P5PP5:                              
+                     ^?Y5PPPPJ!.                ^PGG?~5??GG5^~JPPP5?.                               
 '''
 
 from spotipy.oauth2 import SpotifyOAuth
