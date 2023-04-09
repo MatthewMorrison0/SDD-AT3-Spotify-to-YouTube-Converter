@@ -1,3 +1,4 @@
+
 .Top_div{
     background-color: black;
     padding-bottom: 15px;
@@ -79,8 +80,8 @@
     display: inline-block;
     margin-top: 5px;
     margin-bottom: 5px;
-    margin-left: 50px;
-    margin-right: 500px;
+    margin-left: 100px;
+    margin-right: 300px;
 }
 
 
@@ -96,8 +97,43 @@
     font-family: 'Varela Round', sans-serif;
     font-weight: bold;
     font-size: 20px;
-    margin-bottom: 5px;
-    margin-top: 5px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    margin-left: 70px;
+}
+
+
+
+.Convert_Button:hover{
+    margin-top: 9px;
+    margin-bottom: 9px;
+    padding-top: 11px;
+    padding-bottom: 11px;
+    padding-left: 55px;
+    padding-right: 55px;
+    font-size: 23;
+    margin-left: 30px;
+    transition: margin-top 0.1s, 
+                margin-bottom 0.1s, 
+                padding-top 0.1s, 
+                padding-bottom 0.1s, 
+                padding-left 0.1s,
+                padding-right 0.1s,
+                font-size 0.1s,
+                margin-left 0.1s;
+}
+
+
+
+.Convert_Button:active{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 45px;
+    padding-right: 45px;
+    font-size: 20;
+    margin-left: 40px;
 }
 
 
@@ -123,6 +159,44 @@
     font-weight: bold;
     font-size: 20px;
     margin-top: 27px;
+    margin-bottom: 3px;
+    margin-left: 4.5px;
+    margin-right: 4.5px;
+}
+
+
+
+.Different_Playlist_button:hover{
+    margin-top: 24px;
+    margin-bottom: 0px;
+    padding-top: 18px;
+    padding-bottom: 18px;
+    padding-left: 54px;
+    padding-right: 54px;
+    margin-left: 0px;
+    margin-right: 0px;
+    transition: margin-top 0.1s, 
+                margin-bottom 0.1s, 
+                padding-top 0.1s, 
+                padding-bottom 0.1s, 
+                padding-left 0.1s,
+                padding-right 0.1s,
+                font-size 0.1s,
+                margin-left 0.1s,
+                margin-right 0.1s;
+}
+
+
+
+.Different_Playlist_button:active{
+    margin-top: 27px;
+    margin-bottom: 3px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    padding-left: 45px;
+    padding-right: 45px;
+    margin-left: 4.5px;
+    margin-right: 4.5px;
 }
 
 
@@ -155,5 +229,37 @@
     font-size: 20px;
     margin-bottom: 5px;
     margin-top: 10px;
+    margin-right: 15px;
+}
+
+
+.Help_Button:hover{
+    margin-top: 7px;
+    margin-bottom: 2px;
+    padding-top: 13px;
+    padding-bottom: 13px;
+    padding-left: 13px;
+    padding-right: 13px;
+    margin-right: 12px;
+    transition: margin-top 0.1s, 
+                margin-bottom 0.1s, 
+                padding-top 0.1s, 
+                padding-bottom 0.1s, 
+                padding-left 0.1s,
+                padding-right 0.1s,
+                font-size 0.1s,
+                margin-left 0.1s,
+                margin-right 0.1s;
+}
+
+
+
+.Help_Button:active{
+    margin-top: 10px;
+    margin-bottom: 5px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
     margin-right: 15px;
 }

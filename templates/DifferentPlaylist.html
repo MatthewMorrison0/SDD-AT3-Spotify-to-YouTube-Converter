@@ -8,8 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/PlaylistConverted.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/DifferentPlaylist.css') }}">
 
     <title>SongSwap</title>
 </head>
@@ -28,32 +27,29 @@
             </p>
         </div>
 
-        <div class="Playlist_Converted_div">
-            <p class="Playlist_Converted">
-                Playlist Converted!
+        <div class="Convert_A_Different_Playlist_div">
+            <p class="Convert_A_Different_Playlist">
+                Convert A Different Playlist
             </p>
         </div>
 
-        <div class="Open_Playlist_div">
-            <form method="post" action="/playlistConverted">
-                <input class="Open_Playlist" type="submit" value="Open Playlist" name="open_playlist"/>
+        <div class="Enter_ID_div">
+            <form method="post" action="/differentPlaylist">
+                <input class="Enter_ID" type="text", name="playlist_id" placeholder="Playlist ID">
+                <input class="Convert" type="submit" value="Convert" name="Convert"/>
             </form>
         </div>
 
-        <div class="Home_Page_div">
-            <form method="post" action="/playlistConverted">
-                <input class="Home_Page" type="submit" value="Home Page" name="home_page"/>
+        <div class="Back_div">
+            <form method="post" action="/differentPlaylist">
+                <input class="Back" type="submit" value="Back" name="Back"/>
             </form>
         </div>
 
         <div class="Help_div">
-            <form method="post" action="/playlistConverted">
+            <form method="post" action="/differentPlaylist">
                 <input class="Help_Button" type="submit" value="Help" name="Help"/>
             </form>
         </div>
-
-        <form method="post" action="/playlistConverted">
-            <input type="hidden" name="dummy" value="dummy">
-        </form>
 </body>
 </html>

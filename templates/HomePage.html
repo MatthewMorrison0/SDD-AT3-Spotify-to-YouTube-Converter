@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='CSS/HomePage.css') }}">
+
     <title>SongSwap</title>
 </head>
 <body>
@@ -58,11 +59,10 @@
         {% endfor %}    
 
         <div class="Different_Playlist_div">
-            <button class="Different_Playlist_button">
-                Convert a Different Playlist
-            </button>
+            <form method="post" action="/homePage">
+                <input class="Different_Playlist_button" type="submit" value="Convert a Different Playlist" name="different_playlist"/>
+            </form>
         </div>
-        
         
         <div class="Help_div">
             <form method="post" action="/homePage">
