@@ -102,13 +102,13 @@
     margin-right: 15px;
 }
 
-.Back_div{
+.Home_Page_div{
     display: block;
     text-align: center;
     margin-top: 70px;
 }
 
-.Back{
+.HomePage{
     background-color: rgb(30, 215, 96);
     border: none;
     padding-top: 10px;
@@ -125,7 +125,7 @@
 
 
 
-.Back:hover{
+.HomePage:hover{
     margin-top: 4px;
     margin-bottom: 4px;
     padding-top: 11px;
@@ -147,7 +147,7 @@
 
 
 
-.Back:active{
+.HomePage:active{
     margin-top: 5px;
     margin-bottom: 5px;
     padding-top: 10px;

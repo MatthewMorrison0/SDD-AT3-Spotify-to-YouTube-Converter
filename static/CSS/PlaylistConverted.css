@@ -59,6 +59,35 @@
     margin-top: 5px;
 }
 
+.Open_Playlist:hover{
+    margin-top: 4px;
+    margin-bottom: 4px;
+    padding-top: 11px;
+    padding-bottom: 11px;
+    padding-left: 49.5px;
+    padding-right: 49.5px;
+    transition: margin-top 0.1s, 
+                margin-bottom 0.1s, 
+                padding-top 0.1s, 
+                padding-bottom 0.1s, 
+                padding-left 0.1s,
+                padding-right 0.1s,
+                font-size 0.1s,
+                margin-left 0.1s,
+                margin-right 0.1s;
+}
+
+
+
+.Open_Playlist:active{
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 45px;
+    padding-right: 45px;
+}
+
 .Home_Page_div{
     display: block;
     text-align: center;
@@ -78,6 +107,35 @@
     font-size: 20px;
     margin-bottom: 5px;
     margin-top: 5px;
+}
+
+.Home_Page:hover{
+    margin-top: 4px;
+    margin-bottom: 4px;
+    padding-top: 11px;
+    padding-bottom: 11px;
+    padding-left: 57.2px;
+    padding-right: 57.2px;
+    transition: margin-top 0.1s, 
+                margin-bottom 0.1s, 
+                padding-top 0.1s, 
+                padding-bottom 0.1s, 
+                padding-left 0.1s,
+                padding-right 0.1s,
+                font-size 0.1s,
+                margin-left 0.1s,
+                margin-right 0.1s;
+}
+
+
+
+.Home_Page:active{
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 52px;
+    padding-right: 52px;
 }
 
 .Help_div{

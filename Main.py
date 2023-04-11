@@ -131,6 +131,10 @@ class YouTubeApiClient(): #YouTube Client
 class SpotifyApiClient(): # Spotify Client
     def __init__(self): #  Creates spotify OAuth client
         self.sp_oauth = createSpotifyOAuth() # Initiate OAuth 2.0
+        self.auth_url = self.sp_oauth.get_authorize_url()
+
+    
+    def secondInit(self):
         code = request.args.get('code') # Gets varification code that OAuth 2.0 is complete
         token_info = self.sp_oauth.get_access_token(code) # Gets Spotify API token information using OAuth 2.0 code
         # Extracts individual tokens from token_info
@@ -178,11 +182,11 @@ class SpotifyApiClient(): # Spotify Client
         song_name = spotify_playlist['items'][song_number]['track']['name']
         return [song_name, artist_name]
     
-    def getUsersPlaylists(self, user_id, offset): # Returns playlist that the user has created (public only)
+    def getUsersPlaylists(self, offset): # Returns playlist that the user has created (public only)
         headers = {
             "Authorization" : f"Bearer {self.access_token}"
         }
-        endpoint = 'https://api.spotify.com/v1/users/' + user_id + '/playlists?offset=' + str(offset) + '&limit=50'
+        endpoint = 'https://api.spotify.com/v1/me/playlists?offset=' + str(offset) + '&limit=50'
         return requests.get(endpoint, headers=headers).json()
     
     def getUser(self): # Gets information on user logged in
@@ -195,18 +199,12 @@ class SpotifyApiClient(): # Spotify Client
 
 
 def fetchUserData(): # Get user data ready for the home page
-    # Create Spotify and YouTube clients
-    global spotify_client
-    spotify_client = SpotifyApiClient()
-    global youtube_client
-    youtube_client = YouTubeApiClient()
-
-    user_id = spotify_client.getUser()['id']
-    user_playlists_info = spotify_client.getUsersPlaylists(user_id, 0)
+    user_playlists_info = spotify_client.getUsersPlaylists(0)
     global user_playlists
     user_playlists = []
     playlist_index = 0
     # Create list of all the IDs and names of the playlists the user has
+    print(len(user_playlists_info['items']))
     while playlist_index < len(user_playlists_info['items']):
         user_playlists.append({'id': user_playlists_info['items'][playlist_index]['id'], 'name': user_playlists_info['items'][playlist_index]['name']})
         playlist_index += 1
@@ -288,16 +286,21 @@ app = Flask(__name__)
 
 @app.route('/')
 def login():
-    # Create Spotify OAuth to get redirect page
-    sp_oauth = createSpotifyOAuth()
-    auth_url = sp_oauth.get_authorize_url()
+    # Create Spotify and YouTube clients
+    global youtube_client
+    youtube_client = YouTubeApiClient()
+    global spotify_client
+    spotify_client = SpotifyApiClient()
+    auth_url = spotify_client.auth_url
 
     return redirect(auth_url) # Go to redirect page given by Spotify
 
 @app.route('/redirect', methods=['GET', 'POST'])
 def redirectPage(): # Shows loading screen for users data
     global page_history
+    global spotify_client
     page_history.append('/redirect')
+    spotify_client.secondInit()
     return render_template('Redirect.html') # Render the html for the redirect page
 
 @app.route('/toHome', methods=['GET', 'POST']) # Page has html that calls fetchUserData, then redirects to home page
@@ -375,10 +378,8 @@ def differentPlaylist():
         playlist_converted = False
         spotify_playlist_id = request.form['playlist_id']
         return redirect(url_for('convertingPlaylist')) # Convert playlist
-    elif 'Back' in request.form: # Has the button to go back been pressed?
-        previous_page = page_history[-1] # Store previous page from page_history
-        page_history.pop() # Removes previous page
-        return redirect(previous_page) # Redircts to previos page
+    elif 'home_page' in request.form:
+        return redirect('/homePage') # Redircts to previos page
     elif 'Help' in request.form: # Has help button been pressed?
         # If so, store current page as previous page and redirect user to help page
         page_history.append('/differentPlaylist')
@@ -392,7 +393,7 @@ def createSpotifyOAuth():
         client_id=spotify_client_id,
         client_secret=spotify_client_secret,
         redirect_uri=url_for('redirectPage', _external=True),
-        scope='user-read-private'
+        scope='user-read-private playlist-read-collaborative'
     )
 
 if __name__ == "__main__":
