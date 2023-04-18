@@ -182,18 +182,11 @@ class SpotifyApiClient(): # Spotify Client
         song_name = spotify_playlist['items'][song_number]['track']['name']
         return [song_name, artist_name]
     
-    def getUsersPlaylists(self, offset): # Returns playlist that the user has created (public only)
+    def getUsersPlaylists(self, offset): # Returns playlist that the user has created and liked
         headers = {
             "Authorization" : f"Bearer {self.access_token}"
         }
         endpoint = 'https://api.spotify.com/v1/me/playlists?offset=' + str(offset) + '&limit=50'
-        return requests.get(endpoint, headers=headers).json()
-    
-    def getUser(self): # Gets information on user logged in
-        headers = {
-            "Authorization" : f"Bearer {self.access_token}"
-        }
-        endpoint = 'https://api.spotify.com/v1/me'
         return requests.get(endpoint, headers=headers).json()
 
 
@@ -204,7 +197,6 @@ def fetchUserData(): # Get user data ready for the home page
     user_playlists = []
     playlist_index = 0
     # Create list of all the IDs and names of the playlists the user has
-    print(len(user_playlists_info['items']))
     while playlist_index < len(user_playlists_info['items']):
         user_playlists.append({'id': user_playlists_info['items'][playlist_index]['id'], 'name': user_playlists_info['items'][playlist_index]['name']})
         playlist_index += 1
@@ -393,9 +385,9 @@ def createSpotifyOAuth():
         client_id=spotify_client_id,
         client_secret=spotify_client_secret,
         redirect_uri=url_for('redirectPage', _external=True),
-        scope='user-read-private playlist-read-collaborative'
+        scope='user-read-private playlist-read-collaborative playlist-read-private'
     )
 
 if __name__ == "__main__":
     webbrowser.open('http://127.0.0.1:5000') #  Opens site on webbrowser automatically
-    app.run(port=5000, host='0.0.0.0') #  Runs flask application
+    app.run(port=5000) #  Runs flask application
