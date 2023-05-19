@@ -188,11 +188,19 @@ class SpotifyApiClient(): # Spotify Client
         }
         endpoint = 'https://api.spotify.com/v1/me/playlists?offset=' + str(offset) + '&limit=50'
         return requests.get(endpoint, headers=headers).json()
+    
+    def printUsername(self):
+        headers = {
+            "Authorization" : f"Bearer {self.access_token}"
+        }
+        endpoint = 'https://api.spotify.com/v1/me'
+        print(requests.get(endpoint, headers=headers).json()['display_name'])
 
 
 
 def fetchUserData(): # Get user data ready for the home page
     user_playlists_info = spotify_client.getUsersPlaylists(0)
+    spotify_client.printUsername()
     global user_playlists
     user_playlists = []
     playlist_index = 0
@@ -201,7 +209,7 @@ def fetchUserData(): # Get user data ready for the home page
         user_playlists.append({'id': user_playlists_info['items'][playlist_index]['id'], 'name': user_playlists_info['items'][playlist_index]['name']})
         playlist_index += 1
     while user_playlists_info['next'] != None:
-        user_playlists_info = spotify_client.getUsersPlaylists(user_id, user_playlists_info['offset'] + 50)
+        user_playlists_info = spotify_client.getUsersPlaylists(user_playlists_info['offset'] + 50)
         playlist_index = 0
         while playlist_index < len(user_playlists_info['items']):
             user_playlists.append({'id': user_playlists_info['items'][playlist_index]['id'], 'name': user_playlists_info['items'][playlist_index]['name']})
