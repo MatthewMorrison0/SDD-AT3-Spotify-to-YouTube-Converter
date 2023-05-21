@@ -50,7 +50,7 @@ playlist_converted = False
 spotify_playlist = {}
 page_history = []
 youtube_quota = 200
-song_amount_result = 0 # 0: fine, 1: too many songs, 2: no songs
+song_amount_result = 0 # Does the playlist have zero or too many songs on it? (0: fine, 1: too many songs, 2: no songs)
 
 
 
@@ -236,12 +236,12 @@ def main():
         spotify_playlist = spotify_client.getPlaylistInfo(playlist_id=spotify_playlist_id) # Gets playlist using ID
         if 'error' in spotify_playlist:
             return # return from main()
-        if spotify_playlist['tracks']['total'] * 150 + 50 >= youtube_quota:
+        if spotify_playlist['tracks']['total'] * 150 + 50 >= youtube_quota: # Will this conversion exceed the quota limit?
             song_amount_result = 1
-            return
-        if spotify_playlist['tracks']['total'] == 0:
+            return # return from main()
+        if spotify_playlist['tracks']['total'] == 0: # Does the playlist have zero songs on it?
             song_amount_result = 2
-            return
+            return # return from main()
         next_url = spotify_playlist['tracks']['next'] # Extracts URL for the next page of the playlist (each page only contains at most 100 songs)
         playlist_length = spotify_playlist['tracks']['total'] # Gets playlist length
 
@@ -364,13 +364,13 @@ def playlistConverted():
         elif 'Help' in request.form:
             return redirect('/help')    
         return render_template('PlaylistNotFound.html')
-    if song_amount_result == 1:
+    if song_amount_result == 1: # Does the playlist have too many songs on it?
         if 'home_page' in request.form: # Has the button to go back to the home page been pressed?
             return redirect('/homePage') # If so, redirect user to home page
         elif 'Help' in request.form:
             return redirect('/help')
         return render_template('TooManySongs.html')
-    if song_amount_result == 2:
+    if song_amount_result == 2: # Does the playlist have no songs on it?
         if 'home_page' in request.form: # Has the button to go back to the home page been pressed?
             return redirect('/homePage') # If so, redirect user to home page
         elif 'Help' in request.form:
