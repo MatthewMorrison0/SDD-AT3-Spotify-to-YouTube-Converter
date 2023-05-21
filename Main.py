@@ -44,14 +44,13 @@ from googleapiclient.errors import HttpError
 from google_auth_oauthlib.flow import InstalledAppFlow
 import time
 
-
-spotify_client_id = '30f5cc799ffc4f1a89a2cdc6f8b0784b' # ID used for Spotify API client
-spotify_client_secret = 'a6d4c157e9e04410b6bf784c26e7ca68' # Secret code used for Spotify API client
 spotify_playlist_id = 'NULL'
 youtube_playlist_url = 'NULL'
 playlist_converted = False
 spotify_playlist = {}
 page_history = []
+youtube_quota = 200
+song_amount_result = 0 # 0: fine, 1: too many songs, 2: no songs
 
 
 
@@ -70,6 +69,8 @@ class YouTubeApiClient(): #YouTube Client
         self.youtube_service = build('youtube', 'v3', credentials=self.cridentials)
     
     def getViedoInfoFromQuery(self, queary): #  Gets top videos on YouTube from search queary
+        global youtube_quota
+        youtube_quota -= 100
         print(queary)
         request = self.youtube_service.search().list(
         part="snippet",
@@ -81,6 +82,8 @@ class YouTubeApiClient(): #YouTube Client
         return response
     
     def createPlaylist(self, name): # Creates YouTube Playlist with given name on users account
+        global youtube_quota
+        youtube_quota -= 50
         request = self.youtube_service.playlists().insert(
             part="snippet, status",
             body={
@@ -96,6 +99,8 @@ class YouTubeApiClient(): #YouTube Client
         return response
     
     def addSongToPlaylist(self, video_id, playlist_id): # Adds a song to the playlist given
+        global youtube_quota
+        youtube_quota -= 50
         max_retries = 5
         retry_count = 0
         backoff_time = 1  # In seconds
@@ -223,12 +228,20 @@ def main():
     global youtube_playlist_url
     global playlist_converted
     global spotify_playlist
+    global youtube_quota
+    global song_amount_result
     if playlist_converted == False:
         if spotify_playlist_id == '': # If user nothing for the playlist ID
             return # return from main()
         spotify_playlist = spotify_client.getPlaylistInfo(playlist_id=spotify_playlist_id) # Gets playlist using ID
         if 'error' in spotify_playlist:
             return # return from main()
+        if spotify_playlist['tracks']['total'] * 150 + 50 >= youtube_quota:
+            song_amount_result = 1
+            return
+        if spotify_playlist['tracks']['total'] == 0:
+            song_amount_result = 2
+            return
         next_url = spotify_playlist['tracks']['next'] # Extracts URL for the next page of the playlist (each page only contains at most 100 songs)
         playlist_length = spotify_playlist['tracks']['total'] # Gets playlist length
 
@@ -341,6 +354,7 @@ def playlistConverted():
     global page_history
     global spotify_playlist
     global spotify_playlist_id
+    global song_amount_result
     page_history.append('\playlistConverted')
     if 'error' in spotify_playlist or spotify_playlist_id == '':
         if 'try_again' in request.form: # Has the button to try again been pressed?
@@ -350,7 +364,18 @@ def playlistConverted():
         elif 'Help' in request.form:
             return redirect('/help')    
         return render_template('PlaylistNotFound.html')
-
+    if song_amount_result == 1:
+        if 'home_page' in request.form: # Has the button to go back to the home page been pressed?
+            return redirect('/homePage') # If so, redirect user to home page
+        elif 'Help' in request.form:
+            return redirect('/help')
+        return render_template('TooManySongs.html')
+    if song_amount_result == 2:
+        if 'home_page' in request.form: # Has the button to go back to the home page been pressed?
+            return redirect('/homePage') # If so, redirect user to home page
+        elif 'Help' in request.form:
+            return redirect('/help')
+        return render_template('NoSongs.html')
     if 'open_playlist' in request.form: # Has the button to open the playlist been pressed?
         webbrowser.open(youtube_playlist_url) # If so, open the playlist in a new tab on the web browser
     elif 'home_page' in request.form: # Has the button to go back to the home page been pressed?
@@ -389,6 +414,8 @@ def differentPlaylist():
 
 #  Creates spotify Oauth client
 def createSpotifyOAuth():
+    spotify_client_id = '30f5cc799ffc4f1a89a2cdc6f8b0784b' # ID used for Spotify API client
+    spotify_client_secret = 'a6d4c157e9e04410b6bf784c26e7ca68' # Secret code used for Spotify API client
     return SpotifyOAuth(
         client_id=spotify_client_id,
         client_secret=spotify_client_secret,

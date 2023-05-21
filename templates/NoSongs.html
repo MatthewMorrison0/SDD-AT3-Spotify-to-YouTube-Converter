@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/TooManySongs.css') }}">
+
+    <title>SongSwap</title>
+</head>
+<body>
+    <body style="background-color:rgb(23, 23, 23);">
+        
+        <div class="Top_div">
+        
+        </div>
+        
+        <div class="Title_div">
+            <p class="Title">
+                <img style='vertical-align:middle; scale: 1;' src='/static/Spotify.jpeg'>
+                SongSwap
+                <img style='vertical-align:middle; scale: 1;' src='/static/YouTube.png'>
+            </p>
+        </div>
+        
+        <div class="Playlist_Doesnt_Exist_div">
+            <p class="Playlist_Doesnt_Exist">
+                That Playlist Has No Songs
+            </p>
+        </div>
+
+        <div class="Home_Page_div">
+            <form method="post" action="/playlistConverted">
+                <input class="Home_Page" type="submit" value="Home Page" name="home_page"/>
+            </form>
+        </div>
+
+        <div class="Help_div">
+            <form method="post" action="/playlistConverted">
+                <input class="Help_Button" type="submit" value="Help" name="Help"/>
+            </form>
+        </div>
+</body>
+</html>
