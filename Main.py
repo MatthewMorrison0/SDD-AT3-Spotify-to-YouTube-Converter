@@ -49,7 +49,7 @@ youtube_playlist_url = 'NULL'
 playlist_converted = False
 spotify_playlist = {}
 page_history = []
-youtube_quota = 200
+youtube_quota = 10000
 song_amount_result = 0 # Does the playlist have zero or too many songs on it? (0: fine, 1: too many songs, 2: no songs)
 
 
