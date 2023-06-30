@@ -122,8 +122,8 @@ class YouTubeApiClient(): #YouTube Client
                 )
                 response = request.execute()
                 return response
-            except HttpError as e: # If it fails:
-                if e.resp.status == 409 and 'SERVICE_UNAVAILABLE' in str(e):
+            except HttpError as error: # If it fails:
+                if error.resp.status == 409 and 'SERVICE_UNAVAILABLE' in str(error):
                     retry_count += 1
                     print(f"Attempt {retry_count} failed. Retrying in {backoff_time} seconds...")
                     time.sleep(backoff_time)
